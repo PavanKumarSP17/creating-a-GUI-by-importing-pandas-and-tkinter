@@ -1,0 +1,82 @@
+from tkinter import *
+import pandas as pd
+from matplotlib import *
+import matplotlib.pyplot as plt
+
+
+
+def input_num():
+
+#Graph 1
+    
+    d={}
+    x1=str(name.get())
+    reader = pd.read_csv('Sacramentorealestatetransactions.csv')
+    reader = reader[reader['sale_date'] ==x1]
+    plt.scatter(reader['price'],reader['sale_date'])
+    plt.xlabel('Sales Price')
+    plt.ylabel('Sales Date')
+    plt.show()
+    
+#Graph 2    
+    plt.figure(figsize=(20,10))
+    plt.plot(reader['price'],reader['latitude'])
+    plt.xlabel('Sales Price')
+    plt.ylabel('latitude')
+    plt.show()
+
+    plt.figure(figsize=(20,10))
+    plt.plot(reader['price'],reader['longitude'])
+    plt.ylabel('longitude')
+    plt.xlabel('Sales Price')
+    plt.show()
+
+
+#Graph 3
+    plt.figure(figsize=(20,10))
+    l=list(reader['city'])
+    b=list(reader['beds'])
+    c=0
+    d={}
+    for i in range(0,len(l)):
+        if l[i] not in d:
+                d[l[i]]=0
+                d[l[i]]+=b[i]
+    z=zip(d.keys(),d.values())
+    x,y=zip(*z)
+    plt.bar(x,y)
+    plt.xlabel('city')
+    plt.ylabel('No. of beds')
+    plt.xticks(rotation=90)
+    plt.show()
+
+
+#Graph 4
+    plt.figure(figsize=(20,10))
+    g5=reader['type'].value_counts()
+    plt.ylabel('Number of houses')
+    plt.xlabel('Type of houses')
+    plt.title('no. of different types of houses')
+    g5.plot(kind='bar')
+    plt.show()
+
+
+def makeWindow():
+    global name
+    win=Tk()
+    win.geometry("400x200")
+    frame1=Frame(win)
+    frame1.pack()
+    Label(frame1, text="Sales Date : ").grid(row=0, column=0, sticky=W)
+    nameVar = StringVar()
+    name = Entry(frame1, textvariable=nameVar)
+    name.grid(row=0, column=1, sticky=W)
+    frame2=Frame(win)
+    frame2.pack()
+    button = Button(frame2, text="Sales date to import file",command=input_num,bg="green",fg="white")
+    button.pack(side=BOTTOM)
+    return win
+win=makeWindow()
+win.mainloop()
+    
+    
